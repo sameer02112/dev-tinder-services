@@ -23,6 +23,7 @@ connectDB()
 // Middleware to handle CORS
 app.use(cors({
     origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 })); 
 
@@ -69,15 +70,3 @@ app.get('/feed', async (req,res) => {
         res.status(400).send('Err');
     }
 })
-
-// delete an user
-
-// app.delete('/user', async (req,res) => {
-//     try{
-//         const id = req.body.userId;
-//         await User.findByIdAndDelete(id);
-//         res.send('User deleted!');
-//     }catch(err){
-//         res.status(400).send('Err');
-//     }
-// })

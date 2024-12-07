@@ -1,8 +1,9 @@
 const express = require('express');
+const cors = require('cors');
 const profileRouter = express.Router();
 const {userAuth} = require('./../middlewares/auth');
 const {validateEditProfileData} = require('../utils/validation');
-const User = require('../models/user')
+const User = require('./../models/user')
 
 // Profile View
 profileRouter.get('/profile/view', userAuth , async (req,res) => {
@@ -14,7 +15,8 @@ profileRouter.get('/profile/view', userAuth , async (req,res) => {
 })
 
 // Profile Edit
-profileRouter.patch('/profile/edit', userAuth, async (req,res) => {
+profileRouter.put('/profile/edit', userAuth, async (req,res) => {
+    console.log('inside edit route')
     const data = req.body;
     const id = req.user._id.toString()
     console.log('data',id, data);
