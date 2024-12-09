@@ -10,10 +10,7 @@ const userAuth = async (req, res, next) => {
 
     const decodedMsg = await jwt.verify(token, "DEVTINDER");
     const { _id } = decodedMsg;
-    console.log('decodedMsg',decodedMsg)
-    console.log('id',_id)
     const user = await User.findById(_id);
-    console.log('user',user)
 
     if (!user) throw new Error("User not found!");
 
@@ -21,7 +18,7 @@ const userAuth = async (req, res, next) => {
     next();
     
   } catch (err) {
-    res.status(400).send("Err1 " + err.message);
+    res.status(400).send("ERROR- " + err.message);
   }
 };
 

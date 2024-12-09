@@ -3,7 +3,6 @@ const authRouter = express.Router();
 const {validateSignUpData} = require('../utils/validation');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 
 // Middleware to access cookie
@@ -51,7 +50,7 @@ authRouter.post('/login', async (req,res)=> {
         }
 
     }catch(err){
-        res.status(400).send(err.message);
+        res.status(400).send("ERROR-" + err.message);
     }
 })
 
@@ -68,7 +67,6 @@ authRouter.post('/logout', async (req,res) => {
 authRouter.delete('/delete', async (req,res) => {
     try{    
         const id = req?.query?.id;
-        console.log(id)
         await User.findByIdAndDelete(id);
         res.send('Profile deleted!');
     }catch(err){

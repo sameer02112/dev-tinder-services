@@ -8,10 +8,8 @@ const validateSignUpData = req => {
 }
 
 const validateEditProfileData = data => {
-    console.log('data------',data)
     const allowedUpdates = ['firstName','lastName', 'photoUrl', 'about', 'age', 'skills', 'gender'];
     const isUpdateAllowed = Object.keys(data).every((k) => allowedUpdates.includes(k));
-    console.log('isUpdateAllowed',isUpdateAllowed)
 
     if(!isUpdateAllowed){
         throw new Error('Update not allowed');

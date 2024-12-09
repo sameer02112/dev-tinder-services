@@ -1,6 +1,7 @@
 const express = require('express');
 const { userAuth } = require('../middlewares/auth');
 const ConnectionRequest = require('../models/connectionRequest');
+const User = require('../models/user');
 const userRouter = express.Router();
 
 // GET all pending connection request for logged in user
@@ -19,8 +20,8 @@ userRouter.get('/user/request/recieved', userAuth, async (req,res) => {
 })
 
 // GET all connections
-userRouter.get('user/connection', userAuth, async (req,res) => {
-    const USER_DATA_To_FETCH = ["firstName","lastName","age","gender","about","photoUrl"];
+userRouter.get('/user/connection', userAuth, async (req,res) => {
+    const USER_DATA_TO_FETCH = ["firstName","lastName","age","gender","about","photoUrl"];
     try {
       const user = req.user;
       const connectionRequest = await ConnectionRequest.find({
@@ -29,18 +30,29 @@ userRouter.get('user/connection', userAuth, async (req,res) => {
           { fromUserId: user._id, status: "accepted" },
         ],
       })
-        .populate("fromUserId", USER_DATA_To_FETCH)
-        .populate("toUserID", USER_DATA_To_FETCH);
+        .populate("fromUserId", USER_DATA_TO_FETCH)
+        .populate("toUserId", USER_DATA_TO_FETCH);
 
       const data = connectionRequest.map((row) => {
         if(row.fromUserId._id.toString() == user._id.toString()) return row.toUserId;
         else return row.fromUserId;
       });
-      
+
       res.send(data);
     } catch (err) {
-      res.status(400).json({ message: "err" + err });
+      res.status(400).json('ERROR- '+ err.message);
     }
+})
+
+// GET user profile by id
+userRouter.get('/explore/profile/:id', userAuth, async (req,res) => {
+  try{
+    const idToFetch = req.params.id;
+    const profile = await User.findOne({'_id': idToFetch});
+    res.send(profile);
+  }catch(err){
+    res.status(400).json('ERROR- '+ err.message);
+  }
 })
 
 module.exports = userRouter;

@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const profileRouter = express.Router();
 const {userAuth} = require('./../middlewares/auth');
 const {validateEditProfileData} = require('../utils/validation');
@@ -16,10 +15,8 @@ profileRouter.get('/profile/view', userAuth , async (req,res) => {
 
 // Profile Edit
 profileRouter.put('/profile/edit', userAuth, async (req,res) => {
-    console.log('inside edit route')
     const data = req.body;
     const id = req.user._id.toString()
-    console.log('data',id, data);
     try{
         if(!validateEditProfileData(data)) throw new Error('Invalid edit request');
         const user = await User.findByIdAndUpdate(id, data, {
