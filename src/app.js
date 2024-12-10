@@ -33,24 +33,10 @@ const authRouter = require('./routes/auth');
 const profileRouter = require('./routes/profile');
 const requestRouter = require('./routes/request');
 const userRouter = require('./routes/user');
-const { userAuth } = require('./middlewares/auth');
+const feedRouter = require('./routes/feed');
 
 app.use('/',authRouter);
 app.use('/',profileRouter);
 app.use('/',requestRouter);
 app.use('/',userRouter);
-
-// get all user
-app.get('/feed', userAuth , async (req,res) => {
-    const id = req?.user?._id;
-    try{
-        const user = await User.find({ _id: { $ne: id } }); //exclude the loggedIn user id
-        if(user.length === 0){
-            res.status(401).send("User not found!");
-        }else{
-            res.send(user);
-        }
-    }catch(err){
-        res.status(400).send('Err');
-    }
-})
+app.use('/',feedRouter);
