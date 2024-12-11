@@ -33,11 +33,16 @@ feedRouter.get('/feed', userAuth , async (req,res) => {
                 {_id: {$nin : Array.from(hideUserFromFeed)}},
                 {_id: {$ne: loggedInUser._id}}
             ]
-        }).skip(skip).limit(limit);
+        }).populate({
+            path: "uploadedPhotoId", // Name used for clarity
+            model: "Image",  // Referencing the 'Image' model
+            localField: "uploadedPhotoId", // Field in Image
+            foreignField: "userId", // Field in User
+          })
         res.send(users);
         
     }catch(err){
-        res.status(400).send('Err');
+        res.status(400).send('Err ' + err.message);
     }
 })
 

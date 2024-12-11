@@ -6,6 +6,10 @@ const bcrypt = require('bcrypt');
 
 const userSchema = mongoose.Schema(
   {
+    // _id:{
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: "Image"
+    // },
     firstName: {
       type: String,
       required: true,
@@ -49,6 +53,11 @@ const userSchema = mongoose.Schema(
     },
     photoUrl: {
       type: String,
+      //  ref: "Image"
+    },
+    uploadedPhotoId:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Image"
     },
     about: {
       type: String,
@@ -75,6 +84,13 @@ userSchema.methods.validatePassword = async function(passwordEnteredByUser){
     const isPasswordValid = await bcrypt.compare(passwordEnteredByUser, passwordHash);
     return isPasswordValid;
 }
+
+userSchema.pre("save", function(next){
+  if(!this.uploadedPhotoId){
+    this.uploadedPhotoId = this._id;
+  }
+  next();
+})
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;

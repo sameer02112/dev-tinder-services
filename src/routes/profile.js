@@ -54,8 +54,11 @@ profileRouter.post("/profile/image/", userAuth, upload.single('profilePicture') 
     const imgData = req?.file?.buffer;
     const mimeType = req?.file?.mimetype;
 
+    console.log('loggedInUser',loggedInUser)
+    console.log('loggedInUser._id',loggedInUser._id)
+    console.log('loggedInUser._id.toString()',loggedInUser._id)
     const image = new Image({
-      userId: loggedInUser._id,
+      userId: loggedInUser._id.toString(),
       profilePicture: {
         data: imgData,
         contentType : mimeType,
@@ -75,8 +78,8 @@ profileRouter.get('/profile/image', userAuth, async (req,res) => {
         const loggedInUser = req?.user;
         const img = await Image.findOne({userId: loggedInUser._id});
 
-        res.set('Content-Type', img.profilePicture.contentType);
-        res.send(img.profilePicture.data);
+        res.set('Content-Type', img?.profilePicture?.contentType);
+        res.send(img?.profilePicture?.data);
     }catch(err){
         res.status(400).send(err.message);
     }

@@ -4,6 +4,7 @@ const imageSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
+      // unique: true
     },
     profilePicture: {
         data: Buffer,
