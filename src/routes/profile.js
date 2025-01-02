@@ -54,17 +54,35 @@ profileRouter.post("/profile/image/", userAuth, upload.single('profilePicture') 
     const imgData = req?.file?.buffer;
     const mimeType = req?.file?.mimetype;
 
-    console.log('loggedInUser',loggedInUser)
-    console.log('loggedInUser._id',loggedInUser._id)
-    console.log('loggedInUser._id.toString()',loggedInUser._id)
     const image = new Image({
-      userId: loggedInUser._id.toString(),
+      userId: loggedInUser._id,
       profilePicture: {
         data: imgData,
         contentType : mimeType,
       },
     });
 
+    const existingImg = await Image.find({userId : loggedInUser._id});
+    if(existingImg?.length > 0){
+        console.log("Image present")
+        try {
+            const img = await Image.findOneAndUpdate(
+            { userId: loggedInUser._id },
+            {
+              profilePicture: {
+                data: imgData,
+                contentType: mimeType,
+              },
+            },
+            { new: true }
+          );
+         res.send(img);
+          return;
+        } catch (err) {
+          res.status(400).send(err.message);
+        }
+    }
+    console.log("Image not present")
     await image.save();
     res.send("Image saved successfully!");
   } catch (err) {
@@ -83,6 +101,18 @@ profileRouter.get('/profile/image', userAuth, async (req,res) => {
     }catch(err){
         res.status(400).send(err.message);
     }
+})
+
+// DELETE profile picture
+profileRouter.delete('/profile/image', async (req,res) => {
+  try{
+    const id = req.query.id;
+    console.log(id);
+    await Image.findOneAndDelete({userId : id});
+    res.send("Photo deleted Successfully")
+  }catch(err){
+    res.status(401).send("Couldn't delete photo" + err.message);
+  }
 })
 
 

@@ -7,9 +7,9 @@ const cors = require('cors');
 
 connectDB()
   .then(() => {
-    console.log("DB connected");
+    console.log("DB connected..");
     app.listen(3000, () => {
-      console.log("server started 🚀🚀🚀");
+      console.log("server started..");
     });
   })
   .catch((err) => {

@@ -11,6 +11,7 @@ authRouter.use(cookieParser());
 //Sign Up
 authRouter.post('/signup', async (req,res) => {
     const {firstName, lastName, emailId,  password} = req.body;
+    console.log('here')
     const initialPhotoUrl = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png";
     try{
         validateSignUpData(req);

@@ -11,7 +11,7 @@ userRouter.get('/user/request/recieved', userAuth, async (req,res) => {
         const connectionRequest = await ConnectionRequest.find({
             toUserId: user._id,
             status: 'interested'
-        }).populate("fromUserId", ["firstName","lastName","age","gender","about","photoUrl"]);
+        }).populate("fromUserId", ["firstName","lastName","age","gender","about","photoUrl","uploadedPhotoId"]);
 
         res.send(connectionRequest);
     }catch(err){
@@ -21,7 +21,7 @@ userRouter.get('/user/request/recieved', userAuth, async (req,res) => {
 
 // GET all connections
 userRouter.get('/user/connection', userAuth, async (req,res) => {
-    const USER_DATA_TO_FETCH = ["firstName","lastName","age","gender","about","photoUrl"];
+    const USER_DATA_TO_FETCH = ["firstName","lastName","age","gender","about","photoUrl","uploadedPhotoId"];
     try {
       const user = req.user;
       const connectionRequest = await ConnectionRequest.find({
